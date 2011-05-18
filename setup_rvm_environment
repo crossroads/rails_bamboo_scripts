@@ -1,0 +1,46 @@
+#!/bin/bash
+if [ -z "$4" ]; then
+  echo "Usage:  $0 <app_name> <ruby version> <rubygems version> <bundler version>"
+else
+  # Parameter variables.
+  application=$1
+  ruby_version=$2
+  rubygems_version=$3
+  bundler_version=$4
+
+  # Install RVM if not already installed
+  # -----------------------------------------------------
+  if ! (which rvm) then
+    bash < <( curl http://rvm.beginrescueend.com/releases/rvm-install-head )
+  fi
+
+  # Load RVM into the shell session as a function
+  # -----------------------------------------------------
+  . "/usr/local/rvm/scripts/rvm"
+
+  # Set up ruby environment
+  # -----------------------------------------------------
+  # Install and use the configured ruby version
+  if ! (rvm list | grep $ruby_version); then
+      rvm install $ruby_version
+  fi
+  # Find/Create project gemset, and use it.
+  if ! (rvm list gemsets | grep "$ruby_version@$application "); then
+      rvm use $ruby_version
+      rvm gemset create "$application"
+  fi
+  rvm use "$ruby_version@$application"
+  # Install and use correct version of rubygems
+  if ! (gem -v | grep "$rubygems_version"); then
+      # Only rubygems ~>1.6.2 can be downgraded.
+      rvm rubygems 1.6.2
+      if ! (gem -v | grep "$rubygems_version"); then
+          gem update --system $rubygems_version
+      fi
+  fi
+  # Install and use correct version of bundler.
+  if ! (gem list | grep "bundler" | grep $bundler_version); then
+      gem install bundler -v=$bundler_version --no-rdoc --no-ri
+  fi
+fi
+

@@ -1,0 +1,5 @@
+#!/bin/bash
+cd /opt/rails_bamboo_scripts
+git pull origin master
+./install.sh
+
