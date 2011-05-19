@@ -1,0 +1,3 @@
+## Checks whether bamboo agent is running. If not, restarts it.
+* * * * * root /usr/bin/keep_bamboo_agent_alive
+
