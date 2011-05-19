@@ -1,6 +1,6 @@
 #!/bin/bash
 # Simple cron-based process heartbeat. Should use Monit in future: http://mmonit.com/monit/
-if ! [ /etc/init.d/bamboo-agent status | grep -q "Bamboo Agent is running" ]
+if ! [ /etc/init.d/bamboo-agent status | grep -q "Bamboo Agent is running" ]; then
   /etc/init.d/bamboo-agent start
 fi
 
