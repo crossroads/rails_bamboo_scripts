@@ -1,15 +1,15 @@
 #!/bin/bash
 if [ -z "$1" ]; then
   echo "Usage:  $0 <app_name> <db_adapter = mysql>"
-  echo "        db_adapter choices: mysql, postgres"
+  echo "        db_adapter choices: mysql, mysql2, postgres"
 else
   app_name=$1
   # Default adapter = mysql
   if [ -z "$2" ]; then adapter="mysql"; else adapter=$2; fi
 
-  if [ "$adapter" = "mysql" ]; then
+  if [[ "$adapter" =~ "mysql2?" ]]; then
     echo "test: &test
-  adapter: mysql
+  adapter: %ADAPTER%
   encoding: utf8
   database: %APP%_test
   username: root
@@ -18,7 +18,7 @@ else
 
 cucumber:
   <<: *test
-  database: %APP%_cucumber" | sed s/%APP%/$app_name/g
+  database: %APP%_cucumber" | sed s/%APP%/$app_name/g | sed s/%ADAPTER%/$adapter/g
 
   elif [ "$adapter" = "postgres" ]; then
     echo "test: &test
