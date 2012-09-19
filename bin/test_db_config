@@ -7,7 +7,7 @@ else
   # Default adapter = mysql
   if [ -z "$2" ]; then adapter="mysql"; else adapter=$2; fi
 
-  if [[ "$adapter" =~ "mysql2?" ]]; then
+  if [[ "$adapter" = "mysql" ]] || [[ "$adapter" = "mysql2" ]]; then
     echo "test: &test
   adapter: %ADAPTER%
   encoding: utf8
@@ -36,4 +36,3 @@ cucumber:
 
   fi
 fi
-
